@@ -18,20 +18,20 @@ const addBookhandler = (request, h) => {
     const updatedAt = insertedAt;
 
     if (name === undefined) {
-        const res = h.response({
+        const response = h.response({
             status: "fail",
             message: "Gagal menambahkan buku. Mohon isi nama buku"
         });
-        res.code(400);
-        return res;
+        response.code(400);
+        return response;
     } 
     if (readPage > pageCount) {
-        const res = h.response({
+        const response = h.response({
             status: "fail",
             message: "Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount"
         });
-        res.code(400);
-        return res;
+        response.code(400);
+        return response;
     } 
 
     const newBooks = {
@@ -43,20 +43,22 @@ const addBookhandler = (request, h) => {
     const isSuccess = books.filter((book) => book.id === id).length > 0;
     
     if ( isSuccess ) {
-        const res = h.response({
+        const response = h.response({
             status: "success",
             message: "Buku berhasil ditambahkan",
             data: {
                 bookId: id
             }
         });
-        res.code(201);
-        return res;
+        response.code(201);
+        return response;
     } else {
-        const res = h.response({
+        const response = h.response({
             status: "fail",
             message: "Buku Gagal ditambahkan"
         });
+        response.code(500);
+        return response;
     }
 };
 
@@ -64,7 +66,7 @@ const getAllBooksHandler = (request, h) => {
     const { name, reading, finished } = request.query;
     if (name) {
         const book = books.filter((n) => n.name.toLowerCase().includes(name.toLowerCase()));
-        const res = h.response({
+        const response = h.response({
             status: "success",
             data: {
                 books: book.map((b) => ({
@@ -74,13 +76,13 @@ const getAllBooksHandler = (request, h) => {
                 }))
             }
         });
-        res.code(200);
-        return res;
+        response.code(200);
+        return response;
     };
 
     if (reading !== undefined) {
         const readBook = books.filter((n) => n.reading === (reading === '1'));
-        const res = h.response({
+        const response = h.response({
             status: 'success',
             data: {
                 books: readBook.map((r) => ({
@@ -90,13 +92,13 @@ const getAllBooksHandler = (request, h) => {
                 }))
             }
         });
-        res.code(200);
-        return res;
+        response.code(200);
+        return response;
     };
 
     if (finished !== undefined) {
         const finishedBook = books.filter((n) => n.finished === (finished === '1'));
-        const res = h.response({
+        const response = h.response({
             status: 'success',
             data: {
                 books: finishedBook.map((fin) => ({
@@ -106,8 +108,8 @@ const getAllBooksHandler = (request, h) => {
                 }))
             }
         });
-        res.code(200);
-        return res;
+        response.code(200);
+        return response;
     }
 
     return {
@@ -128,21 +130,21 @@ const getSpecificBookHandler = (request, h) => {
     const book = books.find((n) => n.id === bookId);
 
     if (book !== undefined) {
-        const res = h.response({
+        const response = h.response({
             status: 'success',
             data: {
                 book
             }
         });
-        return res;
+        return response;
     }
 
-    const res = h.response({
+    const response = h.response({
         status: 'fail',
         message: "Buku tidak ditemukan"
     });
-    res.code(404);
-    return res;
+    response.code(404);
+    return response;
 };
 
 const updateBookByIdHandler = (request, h) => {
@@ -163,19 +165,19 @@ const updateBookByIdHandler = (request, h) => {
     const bookById = books.findIndex((book) => book.id === bookId);
 
     if (name === undefined) {
-        const res = h.response({
+        const response = h.response({
             status: 'fail',
             message: "Gagal memperbarui buku. Mohon isi nama buku"
         });
-        res.code(400);
-        return res;
+        response.code(400);
+        return response;
     } else if (readPage > pageCount) {
-        const res = h.response({
+        const response = h.response({
             status: "fail",
             message: "Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount"
         });
-        res.code(400);
-        return res;
+        response.code(400);
+        return response;
     } else if (bookById !== -1) {
         books[bookById] = {
             ...books[bookById],
@@ -190,19 +192,19 @@ const updateBookByIdHandler = (request, h) => {
             updatedAt
         };
 
-        const res = h.response({
+        const response = h.response({
             status: 'success',
             message: "Buku berhasil diperbarui"
         });
-        res.code(200);
-        return res;
+        response.code(200);
+        return response;
     } else {
-        const res = h.response({
+        const response = h.response({
             status: "fail",
             message: "Gagal memperbarui buku. Id tidak ditemukan"
         });
-        res.code(404);
-        return res;
+        response.code(404);
+        return response;
     }
 };
 
@@ -213,20 +215,20 @@ const deleteBookByIdHandler = (request, h) => {
     
     if (indexBook !== -1) {
         books.splice(indexBook, 1);
-        const res = h.response({
+        const response = h.response({
             status: "success",
             message: "Buku berhasil dihapus"
         });
-        res.code(200);
-        return res;
+        response.code(200);
+        return response;
     }
 
-    const res = h.response({
+    const response = h.response({
         status: "fail",
         message: "Buku gagal dihapus. Id tidak ditemukan"
     });
-    res.code(404);
-    return res;
+    response.code(404);
+    return response;
 };
 
 module.exports = { 
