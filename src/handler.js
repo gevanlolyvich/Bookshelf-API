@@ -67,7 +67,11 @@ const getAllBooksHandler = (request, h) => {
         const res = h.response({
             status: "success",
             data: {
-                book
+                books: book.map((b) => ({
+                    id: b.id,
+                    name: b.name,
+                    publisher: b.publisher
+                }))
             }
         });
         res.code(200);
